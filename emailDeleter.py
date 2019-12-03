@@ -20,24 +20,26 @@ def getThreadIds(service,query):
 
         if 'threads' in response:
             threads.extend(response['threads'])
-
+        ####if there are more from the same sender on other pages
+        ###do until there are no next page tokens left
         while 'nextPageToken' in response:
             page_token = response['nextPageToken']
             response = service.users().threads().list(userId='me', q=query,
                                             pageToken=page_token).execute()
             threads.extend(response['threads'])
-        print("Threads found")
         return threads
     except errors.HttpError as error:
         print("An error occured %s" %error)
 def moveThreadsToTrash(service,threads):
+    found = False
     for i in range(0,len(threads)):
         try:
             service.users().threads().trash(userId='me',id = (threads[i]["id"])).execute()
+            found = True
         except Exception as e:
             print(e)
             return False
-    return True
+    return [True,found]
 
 
 
@@ -68,18 +70,24 @@ def main():
     service = build('gmail', 'v1', credentials=creds)
 
     #####get a bunch of senders
-
+    run  = False
     email_list = [line.rstrip('\n') for line in open(FILE_NAME)]
     if len(email_list) >0:
+        run = True
         for i in range(0,len(email_list)):
             query = email_list[i]
             return_threads = getThreadIds(service,query)
             
             success = moveThreadsToTrash(service,return_threads)
             if(success):
-                print("Threads sucessfully moved to trash for sender: " +query)
+                if success[1]:
+                    print("Threads successfully moved to trash for " +query)
+                else:
+                    print("No threads found")
             else:
                 print("Threads not successfully removed for sender: " +query)
+    if not run:
+        print("Nothing in the emails.txt file to delete emails for.")
     
     
 if __name__ == '__main__':
