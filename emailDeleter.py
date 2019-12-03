@@ -10,6 +10,7 @@ import sys
 
 ###scope
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
+FILE_NAME = "emails.txt"
 
 
 def getThreadIds(service,query):
@@ -37,6 +38,9 @@ def moveThreadsToTrash(service,threads):
             print(e)
             return False
     return True
+
+
+
     
     
     
@@ -63,14 +67,20 @@ def main():
     ####used for most of the heavy lifting
     service = build('gmail', 'v1', credentials=creds)
 
-    query = sys.argv[1]
-    return_threads = getThreadIds(service,query)
+    #####get a bunch of senders
+
+    email_list = [line.rstrip('\n') for line in open(FILE_NAME)]
+    if len(email_list) >0:
+        for i in range(0,len(email_list)):
+            query = email_list[i]
+            return_threads = getThreadIds(service,query)
+            
+            success = moveThreadsToTrash(service,return_threads)
+            if(success):
+                print("Threads sucessfully moved to trash for sender: " +query)
+            else:
+                print("Threads not successfully removed for sender: " +query)
     
-    success = moveThreadsToTrash(service,return_threads)
-    if(success):
-        print("Threads sucessfully moved to trash for sender: " +query)
-    else:
-        print("Threads not successfully removed.")
     
 if __name__ == '__main__':
     main()
