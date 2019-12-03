@@ -5,15 +5,45 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from apiclient import errors
+import sys
 
 
 ###scope
-SCOPES = ["https://www.googleapis.com/auth/gmail.metadata"]
+SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
+
+
+def getThreadIds(service,query):
+    try:
+        response = service.users().threads().list(userId='me', q=query).execute()
+        threads = []
+
+        if 'threads' in response:
+            threads.extend(response['threads'])
+
+        while 'nextPageToken' in response:
+            page_token = response['nextPageToken']
+            response = service.users().threads().list(userId='me', q=query,
+                                            pageToken=page_token).execute()
+            threads.extend(response['threads'])
+        print("Threads found")
+        return threads
+    except errors.HttpError as error:
+        print("An error occured %s" %error)
+def moveThreadsToTrash(service,threads):
+    for i in range(0,len(threads)):
+        try:
+            service.users().threads().trash(userId='me',id = (threads[i]["id"])).execute()
+        except Exception as e:
+            print(e)
+            return False
+    return True
+    
+    
+    
+
 
 def main():
     creds = None
-
-
     #####gets/stores credentials for use later
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
@@ -33,23 +63,14 @@ def main():
     ####used for most of the heavy lifting
     service = build('gmail', 'v1', credentials=creds)
 
-    query = input("Type in the email address to search/delete for:")
-    try:
-        response = service.users().threads().list(userId='me', q=query).execute()
-        threads = []
-
-        if 'threads' in response:
-            threads.extend(response['threads'])
-
-        while 'nextPageToken' in response:
-            page_token = response['nextPageToken']
-            response = service.users().threads().list(userId=user_id, q=query,
-                                            pageToken=page_token).execute()
-            threads.extend(response['threads'])
-
-        for i in range(0,len(threads)):
-            print(threads[i]["id"])
-    except errors.HttpError as error:
-        print("An error occured %s" %error)
+    query = sys.argv[1]
+    return_threads = getThreadIds(service,query)
+    
+    success = moveThreadsToTrash(service,return_threads)
+    if(success):
+        print("Threads sucessfully moved to trash for sender: " +query)
+    else:
+        print("Threads not successfully removed.")
+    
 if __name__ == '__main__':
     main()
