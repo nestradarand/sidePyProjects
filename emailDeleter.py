@@ -8,9 +8,19 @@ from apiclient import errors
 import sys
 
 
+'''
+To use, enter the emails you want to move to thrash one line at a time in the file named
+blacklist.txt
+
+Then run this module to have all of them removed from your inbox to the trash.
+
+
+'''
+
+
 ###scope
 SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
-FILE_NAME = "emails.txt"
+FILE_NAME = "blacklist.txt"
 
 
 def getThreadIds(service,query):
@@ -83,7 +93,7 @@ def main():
                 if success[1]:
                     print("Threads successfully moved to trash for " +query)
                 else:
-                    print("No threads found")
+                    print("No threads found for %s" % query)
             else:
                 print("Threads not successfully removed for sender: " +query)
     if not run:
