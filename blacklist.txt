@@ -72,11 +72,7 @@ news@discover.offerup.com
 verify@twitter.com
 d5ngq3lx0dpfbws@marketplace.amazon.com
 team@stashinvest.com
-discuss-6460095114064097280@messages.offerup.com
-discuss-6459923691571859456@messages.offerup.com
-discuss-6459619815513845760@messages.offerup.com
-discuss-6459614297206390784@messages.offerup.com
-discuss-6459376510578282496@messages.offerup.com
+shipment-tracking@amazon.com
 hello@spotify.com
 noreply@omaze.com
 Shepheard@deltasig.org
@@ -99,3 +95,12 @@ profile@angel.co
 7b839nmfv9tmf1s@marketplace.amazon.com
 pinbot@sherlock.pinterest.com
 google-drive-noreply@google.com
+FollettTextRental@fheg.follett.com
+handshake@notifications.joinhandshake.com
+do-not-reply@blackboard.com
+survey@chapman.edu
+mailchimpapp.net
+ETRADE@e.etradefinancial.com
+receipts@messaging.squareup.com
+appletv@insideapple.apple.com
+rentals@amazon.com
