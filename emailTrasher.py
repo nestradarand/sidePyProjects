@@ -49,16 +49,10 @@ def moveThreadsToTrash(service,threads):
         except Exception as e:
             print(e)
             return False
-    return [True,found]
+    return [True,found]   
 
 
-
-    
-    
-    
-
-
-def main():
+def cleanInbox():
     creds = None
     #####gets/stores credentials for use later
     if os.path.exists('token.pickle'):
@@ -100,5 +94,3 @@ def main():
         print("Nothing in the emails.txt file to delete emails for.")
     
     
-if __name__ == '__main__':
-    main()
