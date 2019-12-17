@@ -23,32 +23,52 @@ def recursiveFiles(directory):
 ####retuns time since epoch as [month,year]
 def getLastOpenDate(path):
     lastTimeOpened = os.path.getatime(path)
-    formatted = strftime("%m/%Y",gmtime(lastTimeOpened))
-    return formatted.split("/")
+    formatted = strftime("%m/%Y",gmtime(lastTimeOpened)).split("/")
+    returner = [int(formatted[0]),int(formatted[1])]
+    return returner
 
 def earlierThan(new_Year,limit):
-    return (new_Year[0] < limit[0] and new_Year[1] <limit[1])
+    # if not(int(new_Year[0]) < int(limit[0])):
+    #     return False
+    # elif not(int(new_Year[1]) < int(limit[1])):
+    #     return False
+    # else:
+    #     return True
+    return ( int(new_Year[0]) <= int(limit[0]) and int(new_Year[1]) < int(limit[1]))
 
 ####goes through all directories and relocates files based on when they were last opened
 ###takes the directory to look through and the month/year before which we want all files removed
 def combThroughAndTrash(directory,search_limit):
-    for thing in os.listdir(directory):
-        full_path = os.path.join(directory,thing)
-        if os.path.isfile(full_path):
-            last_opened = getLastOpenDate(full_path)
-            extension = (os.path.splitext(thing))[1]
-            if(extension == ".pdf" and earlierThan(last_opened,search_limit)):
-                Trasher.send2trash(full_path)
-                print(thing + " moved to trash")
-            elif(extension == ".doc" and earlierThan(last_opened,search_limit)) or (extension == ".docx" and earlierThan(last_opened,search_limit)):
-                Trasher.send2trash(full_path)
-                print(thing + " moved to trash")
-            elif(extension == ".ppt" and earlierThan(last_opened,search_limit)) or (extension == ".pptx" and earlierThan(last_opened,search_limit)):
-                Trasher.send2trash(full_path)
-                print(thing + " moved to trash")
-        elif os.path.isdir(full_path):
-            print("Moving to new directory: " + str(full_path))
-            combThroughAndTrash(str(full_path),search_limit)
+    try:
+        for thing in os.listdir(directory):
+            try:
+                full_path = (os.path.join(directory,thing))
+                if os.path.isfile(full_path):
+                    last_opened = getLastOpenDate(full_path)
+                    extension = (os.path.splitext(thing))[1]
+                    if(earlierThan(last_opened,search_limit)): 
+                        if(extension == ".pdf"):
+                            Trasher.send2trash(full_path)
+                            print(thing + " moved to trash")
+                        elif(extension == ".doc") or (extension == ".docx"):
+                            Trasher.send2trash(full_path)
+                            print(thing + " moved to trash")
+                        elif(extension == ".ppt") or (extension == ".pptx"):
+                            Trasher.send2trash(full_path)
+                            print(thing + " moved to trash")
+                        else:
+                            continue
+                elif os.path.isdir(full_path):
+                    print("Moving to new directory: " + str(full_path))
+                    combThroughAndTrash(str(full_path),search_limit)
+            except Exception as e:
+                print(e)
+                print("Exception occurred trying to handle:" + full_path)
+                print("Execution will continue")
+                continue
+    except Exception:
+        print("A fatal exception occurred trying to comb through the directory: " + directory)
+        sys.exit(0)
 
         
 def getRoot(directory):
@@ -76,25 +96,22 @@ def main():
                 getRoot(os.getcwd())
     except Exception:
         try:
+            year = int(input("Enter the year you wish to set the deleting limit to: "))
+            month = int(input("Enter the month you wish to set the deleting limit to: "))
+            date_limit = [month,year]
             print("Do you want to use the current working directory to comb through?")
             theInput = int(input("Enter 1 for yes 0 for no: "))
             if(theInput == 1):
-                combThroughAndTrash(os.getcwd(),[6,2017])
+                combThroughAndTrash(os.getcwd(),date_limit)
             elif(theInput == 0):
                 newDir = input("Enter new directory to use: ")
-                combThroughAndTrash(newDir,[6,2017])
+                combThroughAndTrash(newDir,date_limit)
             else:
                 print("Invalid command entered")
 
         except Exception:
             print("Invalid information entered")
-    # directory = os.path.dirname("dingleHopper")
-    # if not os.path.exists(directory):
-    #     print("does not exist")
-    #     os.mkdir(os.getcwd() + "\\"+ str("dingleHopper"))
-    #     print("Directory made")
-    # else:
-    #     print("exists")
+
 
 if __name__ == "__main__":
     main()
