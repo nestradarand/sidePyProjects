@@ -10,7 +10,7 @@ This module is to be used to find the root of directories from the current one
 and to comb through the files from a specified directory to find/rellocate files
 '''
 
-##works with recursion
+##prints everything recursively going depth first
 def recursiveFiles(directory):
     for thing in os.listdir(directory):
         full_path = os.path.join(directory,thing)
@@ -27,13 +27,8 @@ def getLastOpenDate(path):
     returner = [int(formatted[0]),int(formatted[1])]
     return returner
 
+###returns if a date array is less than the second date arrray
 def earlierThan(new_Year,limit):
-    # if not(int(new_Year[0]) < int(limit[0])):
-    #     return False
-    # elif not(int(new_Year[1]) < int(limit[1])):
-    #     return False
-    # else:
-    #     return True
     return ( int(new_Year[0]) <= int(limit[0]) and int(new_Year[1]) < int(limit[1]))
 
 ####goes through all directories and relocates files based on when they were last opened
@@ -67,8 +62,7 @@ def combThroughAndTrash(directory,search_limit):
                 print("Execution will continue")
                 continue
     except Exception:
-        print("A fatal exception occurred trying to comb through the directory: " + directory)
-        sys.exit(0)
+        print("A heavy exception occurred trying to comb through the directory: " + directory)
 
         
 def getRoot(directory):
