@@ -13,8 +13,6 @@ To use, enter the emails you want to move to thrash one line at a time in the fi
 blacklist.txt
 
 Then run this module to have all of them removed from your inbox to the trash.
-
-
 '''
 
 
