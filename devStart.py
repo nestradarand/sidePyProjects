@@ -19,8 +19,8 @@ def typeInCMD(text):
     auto.press('enter')
 
 def main():
-
     openCmd()
+    time.sleep(.5)
     typeInCMD('cd Desktop/sidePyProjects')
     time.sleep(1)
     openVisualStudio()
