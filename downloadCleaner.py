@@ -2,9 +2,12 @@ import os
 
 
 def switchPaths(firstDir,secondDir,name):
-    firstPath = firstDir + "/" + name
-    newPath = secondDir + "/" + name
-    os.rename(firstPath,newPath)
+    try:
+        firstPath = firstDir + "/" + name
+        newPath = secondDir + "/" + name
+        os.rename(firstPath,newPath)
+    except FileExistsError:
+        print('File at path ',firstPath,' already exists in target path.  This will be skipped.')
 
 def moveFilesToDesktop(firstDir):
     for thing in os.listdir(firstDir):
