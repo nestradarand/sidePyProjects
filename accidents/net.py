@@ -40,41 +40,41 @@ df = df.interpolate()
 df = df.dropna()
 sum(np.where(df.isnull()))
 
-plt.boxplot(df.distance_affected)
-df.distance_affected.describe()
+#plt.boxplot(df.distance_affected)
+#df.distance_affected.describe()
 df.distance_affected = np.where(df.distance_affected >(1.5*.01 + .01),
                                 (1.5*.01 +.01),df.distance_affected)
 
 
-plt.boxplot(df.temp)
-df.temp.describe()
+#plt.boxplot(df.temp)
+#df.temp.describe()
 df.temp = np.where(df.temp > (1.5*27 + 75.9),
                    (1.5*27 + 75.9),df.temp)
 df.temp = np.where(df.temp <-10,-10,df.temp)
 
-plt.boxplot(df.wind_chill)
-plt.show()
-df.wind_chill.describe()
+#plt.boxplot(df.wind_chill)
+#plt.show()
+#df.wind_chill.describe()
 df.wind_chill = np.where(df.wind_chill <-10,-10,df.wind_chill)
 
-plt.boxplot(df.humidity)
+#plt.boxplot(df.humidity)
 
 
-plt.boxplot(df.air_pressure)
-df.air_pressure.describe()
+#plt.boxplot(df.air_pressure)
+#df.air_pressure.describe()
 df.air_pressure = np.where(df.air_pressure > (1.5*iqr(df.air_pressure) + 30.15),
                            (1.5*iqr(df.air_pressure) + 30.15),df.air_pressure)
 df.air_pressure = np.where(df.air_pressure < (29.92-1.5*iqr(df.air_pressure)),
                            (29.92-1.5*iqr(df.air_pressure)),df.air_pressure)
 
-plt.boxplot(df.visibility)
-df.visibility.describe()
+#plt.boxplot(df.visibility)
+#df.visibility.describe()
 df.visibility = np.where(df.visibility > 30,30,df.visibility)
 
-plt.boxplot(df.wind_speed)
+#plt.boxplot(df.wind_speed)
 df.wind_speed = np.where(df.wind_speed > 80,80,df.wind_speed)
 
-plt.boxplot(df.precipitation)
+#plt.boxplot(df.precipitation)
 df.precipitation = np.where(df.precipitation >2,2,df.precipitation)
 
 
@@ -113,4 +113,19 @@ test_data.to_csv("accidents_test.csv",index = False)
 df.describe()
 df.corr()
 
+###cluster testing
+from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+scaler = StandardScaler().fit(df)
+data = scaler.transform(df)
+
+
+plt.figure()
+for i in range(0,int(len(data)/4)):
+    plt.scatter(data[i][2],data[i][3],c= 'red')
 
