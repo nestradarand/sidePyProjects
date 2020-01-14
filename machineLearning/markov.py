@@ -1,3 +1,11 @@
+'''
+Name: Noah Estrada-Rand
+Student ID  # : 2272490
+Chapman email: estra146@mail.chapman.edu
+Course Number and Section: CPSC-393-01
+Assignment: Markov Chains
+'''
+
 import numpy as np
 
 def getProbs(probDict):
@@ -10,7 +18,7 @@ def getProbs(probDict):
     return probs
 
 def main():
-    file_name = str(input('Type in the name of the file you want to train on: '))
+    file_name = 'tyler.txt'
     try:
         #open and clean data
         file = open(file_name, 'r')
