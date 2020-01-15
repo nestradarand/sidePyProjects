@@ -1,12 +1,11 @@
 '''
-Name: Noah Estrada-Rand
-Student ID  # : 2272490
-Chapman email: estra146@mail.chapman.edu
+Name: Noah Estrada-Rand, Ricky Elder, Brent Jang
 Course Number and Section: CPSC-393-01
 Assignment: Markov Chains
 '''
 
 import numpy as np
+import sys
 
 def getProbs(probDict):
     probs = []
@@ -18,7 +17,12 @@ def getProbs(probDict):
     return probs
 
 def main():
-    file_name = 'tyler.txt'
+    args = sys.argv
+    file_name = ''
+    if len(args) >1:
+        file_name = args[1]
+    else:
+        file_name = 'tyler.txt'
     try:
         #open and clean data
         file = open(file_name, 'r')
