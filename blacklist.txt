@@ -1,9 +1,12 @@
 no-reply@accounts.google.com
+noreply@medium.com
+members@medium.com
 noreply@email.apple.com
 noreply@robinhood.com
 no-reply@samsungcloud.com
 no-reply@twitch.tv
 email@et.uber.com
+noreply@steampowered.com
 aws-marketing-latam@amazon.com
 messaging-digest-noreply@linkedin.com
 chegg@ses.chegg.com
@@ -18,8 +21,8 @@ pinbot@inspire.pinterest.com
 info@ticketweb.com
 feedback@slack.com
 store-news@amazon.com
+noreply-utos@google.com
 messaging-digest-noreply@linkedin.com
-nvidia@email.nvidia.com
 eekerteam@ziprecruiter.com
 googlehome-noreply@google.com
 googlepreviewprogram-noreply@google.com
@@ -70,7 +73,7 @@ marketing@socalmotorcycles.com
 phone-by-google+noreply@googleproductforums.com
 playpartners-noreply@google.com
 notifications@chegg.com
-myfitnesspal@mfp.underarmour.com
+info@post.jobhat.com
 profile@angel.co
 pinbot@sherlock.pinterest.com
 google-drive-noreply@google.com
@@ -83,6 +86,8 @@ ETRADE@e.etradefinancial.com
 receipts@messaging.squareup.com
 appletv@insideapple.apple.com
 rentals@amazon.com
+recommendations@inspire.pinterest.com
+seekerteam@ziprecruiter.com
 noreply@ziprecruiter.com
 aws-marketing-email-replies@amazon.com
 noreply@email.apple.com
