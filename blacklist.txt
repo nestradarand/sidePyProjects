@@ -105,3 +105,9 @@ no-reply@spotify.com
 self-defense@getsafeusa.com
 jobs-noreply@linkedin.com
 uber@uber.com
+do-not-reply@stackoverflow.email
+noreply@github.com
+do_not_reply@itunes.com
+googlestore-noreply@google.com
+no_reply@email.apple.com
+donotreply@observatoryoc.com
