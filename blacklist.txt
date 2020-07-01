@@ -28,6 +28,7 @@ googlehome-noreply@google.com
 googlepreviewprogram-noreply@google.com
 customerservice@utees.com
 noreply@citiprogram.org
+communication@akpsi.org
 account-update@amazon.com
 rodriguez@deltasig.org
 mail@change.org
@@ -111,3 +112,14 @@ do_not_reply@itunes.com
 googlestore-noreply@google.com
 no_reply@email.apple.com
 donotreply@observatoryoc.com
+pacificlife@myworkday.com
+invitations@linkedin.com
+order@catchsurf.com
+hello@bootcampspot.com
+hondafinancialservices@emailnotify.net
+Spartan@t.spartan.com
+marketplace-messages@amazon.com
+googlenest@google.com
+noreply-developer-googleplay@google.com
+fortnite@epicgames.com
+noreply@marketing.lyftmail.com
