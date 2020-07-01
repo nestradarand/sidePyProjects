@@ -1,12 +1,12 @@
 import requests
 from bs4 import BeautifulSoup
 
-
+####get the desired data from the tree from beautiful soup
 def parse_craigslist_data(tree):
 
     results_p = tree.find_all('p',{'class':'result-info'})
-    for res_data in results_p:
-        print('_____NEWITEM_______')
+    for i, res_data in enumerate(results_p):
+        print('Result:{0}'.format(i))
         price = res_data.findChild('span',{'class':'result-price'})
         area = res_data.findChild('span',{'class':'result-hood'})
         date =  res_data.findChild('time',{'class':'result-date'})
@@ -18,21 +18,39 @@ def parse_craigslist_data(tree):
         if date:
             print(date.text)
 
-def parse_next_page(tree,root_url):
+###get the next page by tag
+def parse_next_page(tree,root_url:str):
     next_page = tree.find('a',{'class':'button next'})
-    print('{0}{1}'.format(root_url,next_page['href']))
+    if next_page:
+        return '{0}{1}'.format(root_url,next_page['href'])
+    else:
+        return None
 
 
 def main():
+    url_queue = []
     starting_url = 'https://orangecounty.craigslist.org/search/sga?query=surfboard&sort=pricedsc&hasPic=1'
     base_url = 'https://orangecounty.craigslist.org'
 
-    html_content = requests.get(starting_url).text
-    ##get parsing tree 
-    soup = BeautifulSoup(html_content, "html.parser")
+    url_queue.append(starting_url)
 
-    parse_craigslist_data(soup)
-    parse_next_page(soup,base_url)
+    while len(url_queue) >= 1:
+        html_content = requests.get(url_queue[-1]).text
+        ##get parsing tree 
+        soup = BeautifulSoup(html_content, "html.parser")
+        ###parse the data and get next page
+        parse_craigslist_data(soup)
+        ###find next page and if found insert the new link
+        new_url = parse_next_page(soup,base_url)
+        if new_url:
+            url_queue.insert(0,new_url)
+        url_queue.pop()
+    print('---Crawling completed---')
+            
+
+
+
+    
     
 
 if __name__ == '__main__':
