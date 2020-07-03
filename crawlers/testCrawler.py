@@ -25,13 +25,29 @@ def parse_main_page_data(tree):
 def parse_post_details(new_link:str):
     new_html = requests.get(new_link).text
     small_soup = BeautifulSoup(new_html,'html.parser')
+    ### get the title and check for location 
+    title_span = small_soup.find('span',{'id':'titletextonly'})
+    print('Title:',title_span.text)
 
+
+    ###get all the extra post attributes
     attrs_p = small_soup.find('p',{'class':'attrgroup'})
     if attrs_p:
         children_elements = attrs_p.find_all()
         for i,item in enumerate(children_elements):
             if i % 3 == 0:
                 print(item.text.split(':'))
+    ###get the number of photos
+    thumbnails = small_soup.find('div',{'id':'thumbs'})
+    num_pics = int(len(thumbnails.find_all())/2)
+    print("Number of images",num_pics)
+
+    ###get time since post
+    time_since = small_soup.find_all('time',{'class':'date timeago'})
+    for item in time_since:
+        print(item['datetime'])
+
+    
             
 ###get the next page by tag
 def parse_next_page(tree,root_url:str):
