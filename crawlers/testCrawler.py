@@ -1,51 +1,72 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
 ####get the desired data from the tree from beautiful soup
-def parse_main_page_data(tree):
+def parse_craigs_data(tree):
 
     results_p = tree.find_all('p',{'class':'result-info'})
-    for i, res_data in enumerate(results_p):
-        print('Result:{0}'.format(i))
+    for res_data in results_p:
+        ###pull all the relevant data
         price = res_data.findChild('span',{'class':'result-price'})
         area = res_data.findChild('span',{'class':'result-hood'})
         date =  res_data.findChild('time',{'class':'result-date'})
         post_link = res_data.findChild('a',{'class':'result-title hdrlnk'})
-        ####deal with none type in the event of text property
+
+        ####if returned data is notnull then get the text from the tag
         if price:
-            print(price.text)
+            price = price.text
         if area:
-            print(area.text)
+            area = area.text
         if date:
-            print(date.text)
+            date = date.text
         if post_link:
-            parse_post_details(post_link['href'])
+            post_link = post_link['href']
+
+        ###get page specifics ###
+        post_res = parse_post_details(post_link)
+
+        to_return = [price,area,date]
+        to_return.extend(post_res)
+        
+        yield to_return
+        
 
 
 def parse_post_details(new_link:str):
+    to_return = []
+
+    ###get html for new link
     new_html = requests.get(new_link).text
     small_soup = BeautifulSoup(new_html,'html.parser')
+
     ### get the title and check for location 
     title_span = small_soup.find('span',{'id':'titletextonly'})
-    print('Title:',title_span.text)
-
+    if title_span:
+        to_return.append(title_span.text)
 
     ###get all the extra post attributes
     attrs_p = small_soup.find('p',{'class':'attrgroup'})
+    details = []
     if attrs_p:
         children_elements = attrs_p.find_all()
-        for i,item in enumerate(children_elements):
-            if i % 3 == 0:
-                print(item.text.split(':'))
+        for item in children_elements[::3]:
+            details.append(item.text.split(":"))
+    to_return.append(details)
+
     ###get the number of photos
     thumbnails = small_soup.find('div',{'id':'thumbs'})
-    num_pics = int(len(thumbnails.find_all())/2)
-    print("Number of images",num_pics)
+    if thumbnails:
+        thumbnails = int(len(thumbnails.find_all())/2)
+    to_return.append(thumbnails)
 
     ###get time since post
     time_since = small_soup.find_all('time',{'class':'date timeago'})
-    for item in time_since:
-        print(item['datetime'])
+    for item in time_since[1:]:
+        to_return.append(item['datetime'])
+    
+
+    return to_return
 
     
             
@@ -60,17 +81,30 @@ def parse_next_page(tree,root_url:str):
 
 def main():
     url_queue = []
-    starting_url = 'https://orangecounty.craigslist.org/search/sga?query=surf&sort=pricedsc&hasPic=1'
+    starting_url = 'https://orangecounty.craigslist.org/search/sss?query=surfboard&sort=rel'
     base_url = 'https://orangecounty.craigslist.org'
 
     url_queue.append(starting_url)
+
+    ###initialize df ####
+    # columns = ["title","price","location","date","number_images","time_posted"]
+    # new_data = pd.DataFrame(columns = columns)
+
 
     while len(url_queue) >= 1:
         html_content = requests.get(url_queue[-1]).text
         ##get parsing tree 
         soup = BeautifulSoup(html_content, "html.parser")
+
         ###parse the data and get next page
-        parse_main_page_data(soup)
+        page_res = parse_craigs_data(soup)
+
+
+        for res in page_res:
+            print(res)
+    
+
+
         ###find next page and if found insert the new link
         new_url = parse_next_page(soup,base_url)
         if new_url:
