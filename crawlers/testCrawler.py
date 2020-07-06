@@ -50,8 +50,14 @@ def parse_post_details(new_link:str):
     details = []
     if attrs_p:
         children_elements = attrs_p.find_all()
+        temp = {}
         for item in children_elements[::3]:
-            details.append(item.text.split(":"))
+            try:
+                splits = item.text.split(":")
+                temp[splits[0]] = splits[1]
+            except:
+                continue
+        details.append(temp)
     to_return.append(details)
 
     ###get the number of photos
@@ -61,9 +67,10 @@ def parse_post_details(new_link:str):
     to_return.append(thumbnails)
 
     ###get time since post
-    time_since = small_soup.find_all('time',{'class':'date timeago'})
-    for item in time_since[1:]:
-        to_return.append(item['datetime'])
+    time_posted = small_soup.find('p',{'id':'display-date'}).find('time',{'class':'date timeago'})
+    if time_posted:
+        time_posted = time_posted['datetime']
+    to_return.append(time_posted)
     
 
     return to_return
@@ -87,22 +94,41 @@ def main():
     url_queue.append(starting_url)
 
     ###initialize df ####
-    # columns = ["title","price","location","date","number_images","time_posted"]
-    # new_data = pd.DataFrame(columns = columns)
+    columns = ["title","price","location","date","condition","make / manufacturer",
+                "model name / number","size / dimensions","number_images","time_posted"]
+    new_data = pd.DataFrame(columns = columns)
 
-
+    
+    count = 0
     while len(url_queue) >= 1:
         html_content = requests.get(url_queue[-1]).text
+
         ##get parsing tree 
         soup = BeautifulSoup(html_content, "html.parser")
 
         ###parse the data and get next page
         page_res = parse_craigs_data(soup)
 
-
         for res in page_res:
-            print(res)
-    
+            temp_dict = {}
+            if len(res[4]) > 0:
+                temp_dict.update({key:value for key,value in res[4][0].items()})
+
+            temp_dict.update({
+                'price' : res[0],
+                'location' : res[1],
+                'date' : res[2],
+                'title' : res[3],
+                'number_images' : res[5],
+                'time_posted' : res[6]
+            })
+            new_data = new_data.append(temp_dict,ignore_index = True)
+            count += 1
+            print(count)
+                
+
+
+
 
 
         ###find next page and if found insert the new link
@@ -110,6 +136,9 @@ def main():
         if new_url:
             url_queue.insert(0,new_url)
         url_queue.pop()
+
+        ###write the data to a csv
+        new_data.to_csv("craigs_data.csv",index = False)
     print('---Crawling completed---')
             
 
