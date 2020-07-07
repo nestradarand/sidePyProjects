@@ -99,7 +99,6 @@ def main():
     new_data = pd.DataFrame(columns = columns)
 
     
-    count = 0
     while len(url_queue) >= 1:
         html_content = requests.get(url_queue[-1]).text
 
@@ -123,8 +122,6 @@ def main():
                 'time_posted' : res[6]
             })
             new_data = new_data.append(temp_dict,ignore_index = True)
-            count += 1
-            print(count)
                 
 
 
