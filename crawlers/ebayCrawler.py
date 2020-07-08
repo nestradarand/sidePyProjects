@@ -101,6 +101,10 @@ def main():
 
     url_queue = [start_url]
 
+    columns = ["title","price","location","currency","condition","number_images",
+                "shipment_zone","accepts_returns"]
+    new_data = pd.DataFrame(columns = columns)
+
     while len(url_queue) >= 1:
         ###get the page's html
         html_content = requests.get(start_url).text
@@ -108,7 +112,17 @@ def main():
 
         ###for each post on the page do something
         for res in parse_ebay_page(soup):
-            print(res)
+            temp_dict = {
+                'title' : res[0],
+                'price' : res[1],
+                'location' : res[3],
+                'currency' : res[2],
+                'condition' : res[4],
+                'number_images' : res[5],
+                'shipment_zone' :res[6],
+                'accepts_returns' : res[7]
+            }
+            new_data = new_data.append(temp_dict,ignore_index = True)
 
         ###get the next page
         next_page = parse_next_ebay_page(soup)
@@ -116,6 +130,9 @@ def main():
         if next_page:
             url_queue.insert(0,next_page)
         url_queue.pop()
+    new_data.to_csv("ebayOutput.csv",index = False)
+
+        
     print('----Crawling completed----')
 
 
